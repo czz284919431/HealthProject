@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.czz.dao.CheckGroupDao">
+
+    <!--分页查询-->
+    <select id="findPageByCondition" parameterType="String" resultType="CheckGroup">
+        select * from t_checkgroup
+        <where>
+            <if test="value != null and value.length >0">
+                code like #{queryString} or name like #{queryString} or helpCode like #{queryString}
+            </if>
+        </where>
+    </select>
+
+    <!--查询所有检查项-->
+    <select id="findAll" resultType="CheckGroup">
+           select * from t_checkgroup
+    </select>
+
+    <!--添加检查组-->
+    <insert id="addGroup" parameterType="checkGroup" keyProperty="id" useGeneratedKeys="true">
+      insert into t_checkgroup (code,name,helpCode,sex,remark,attention)
+       values (#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+
+    <!--添加检查组里的检查项-->
+    <insert id="addCheckItemByGroupId" parameterType="int">
+        insert into t_checkgroup_checkitem (checkgroup_id,checkitem_id)
+        values(#{checkGroupId},#{checkitemId})
+    </insert>
+
+    <select id="findById" parameterType="_int" resultType="checkGroup">
+         select * from t_checkgroup where id=#{id}
+    </select>
+
+    <select id="findCheckItemByCheckGroup" parameterType="_int" resultType="int">
+         select checkitem_id from t_checkgroup_checkitem where checkgroup_id=#{id}
+    </select>
+
+    <!--编辑检查组里的检查组-->
+    <update id="updateCheckGroup" parameterType="checkGroup">
+          update t_checkgroup
+        set
+            code=#{code},
+            name=#{name},
+            helpCode=#{helpCode},
+            sex=#{sex},
+            remark=#{remark},
+            attention=#{attention}
+        where id=#{id}
+    </update>
+
+    <!-- &lt;!&ndash;编辑检查组里的检查项&ndash;&gt;
+     <update id="updateCheckItemByCheckGroupId" parameterType="_int">
+            update t_checkgroup_checkitem set checkitem_id=  where checkgroup_id=#{id}
+     </update>-->
+
+    <!--编辑检查组里检查项之前的先删除检查项信息-->
+    <delete id="deleteCheckItemByCheckGroup" parameterType="_int">
+        delete from t_checkgroup_checkitem where checkgroup_id=#{id}
+    </delete>
+
+</mapper>

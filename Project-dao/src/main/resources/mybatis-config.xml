@@ -7,6 +7,8 @@
         <plugin interceptor="com.github.pagehelper.PageHelper">
             <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL 六种数据库-->
             <property name="dialect" value="mysql"/>
+            <!--合理化分页，当页码数<1时会跳转进入第一一页，大于最后.....-->
+            <property name="reasonable" value="true"/>
         </plugin>
     </plugins>
 </configuration>

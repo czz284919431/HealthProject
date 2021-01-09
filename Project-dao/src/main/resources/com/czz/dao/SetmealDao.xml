@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czz.dao.SetmealDao">
+
+    <insert id="addSetmeal" parameterType="setmeal" keyProperty="id" useGeneratedKeys="true">
+         insert into t_setmeal(name,code,helpCode,sex,age,price,remark,attention,img)
+        values (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+    </insert>
+
+    <insert id="addCheckGroupBySetmealId" parameterType="_int">
+         insert into t_setmeal_checkgroup (setmeal_id,checkgroup_id)
+        values(#{setmealId},#{checkGroupId})
+    </insert>
+
+    <select id="findPage" parameterType="String" resultType="setmeal">
+        select * from t_setmeal
+        <where>
+            <if test="value != null and value.length>0">
+                code like #{queryString} or name like #{queryString} or helpCode like #{queryString}
+            </if>
+        </where>
+    </select>
+</mapper>
