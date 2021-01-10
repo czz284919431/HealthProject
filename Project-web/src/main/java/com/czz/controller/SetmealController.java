@@ -5,18 +5,17 @@ import com.czz.constant.MessageConstant;
 import com.czz.entity.PageResult;
 import com.czz.entity.QueryPageBean;
 import com.czz.entity.Result;
+import com.czz.health.pojo.CheckGroup;
 import com.czz.health.pojo.Setmeal;
 import com.czz.service.SetmealService;
 import com.czz.utils.QiNiuUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -69,6 +68,7 @@ public class SetmealController {
 
     /**
      * 添加
+     *
      * @param setmeal
      * @param checkgroupIds
      * @return
@@ -81,12 +81,60 @@ public class SetmealController {
 
     /**
      * 分页
+     *
      * @param queryPageBean
      * @return
      */
     @PostMapping("/findPage")
-    public Result findPage(@RequestBody QueryPageBean queryPageBean){
+    public Result findPage(@RequestBody QueryPageBean queryPageBean) {
         PageResult<Setmeal> pageResult = setmealService.findPage(queryPageBean);
-        return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,pageResult);
+        return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, pageResult);
+    }
+
+    /**
+     * 查询 套餐
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/findById")
+    public Result findById(int id) {
+        Setmeal setmeal = setmealService.findById(id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("domain", QiNiuUtils.DOMAIN);
+        map.put("setmeal", setmeal);
+        return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, map);
+    }
+
+    /**
+     * 根据套餐查询检查组
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/findCheckGroupBySetmeal")
+    public Result findCheckGroupBySetmeal(int id) {
+        List<Integer> integerList = setmealService.findCheckGroupBySetmeal(id);
+        return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS, integerList);
+    }
+
+    /**
+     * 编辑
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
+        setmealService.update(setmeal, checkgroupIds);
+        return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
+    }
+
+    /**
+     * 删除
+     *
+     * @return
+     */
+    @PostMapping("/delete")
+    public Result delete(int id) {
+        setmealService.delete(id);
+        return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
     }
 }

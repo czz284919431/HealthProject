@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author czz
@@ -49,5 +50,28 @@ public class OrderSettingServiceImpl implements OrderSettingService {
             }
         }
 
+    }
+
+    /**
+     * 获取当前预约设置界面
+     *
+     * @param month
+     * @return
+     */
+    @Override
+    public List<Map<String, Integer>> findByMonth(String month) {
+        month += "%";
+        List<Map<String, Integer>> mapList = orderSettingDao.findByMonth(month);
+        return mapList;
+    }
+
+    /**
+     * 设置可预约人数
+     * @param orderSetting
+     * @throws MyException
+     */
+    @Override
+    public void updateNumber(OrderSetting orderSetting) throws MyException {
+        orderSettingDao.updateNumber(orderSetting);
     }
 }

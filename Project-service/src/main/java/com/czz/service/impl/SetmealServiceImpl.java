@@ -5,13 +5,19 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.czz.dao.SetmealDao;
 import com.czz.entity.PageResult;
 import com.czz.entity.QueryPageBean;
+import com.czz.exception.MyException;
+import com.czz.health.pojo.CheckGroup;
 import com.czz.health.pojo.Setmeal;
 import com.czz.service.SetmealService;
+import com.czz.utils.QiNiuUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author czz
@@ -55,5 +61,66 @@ public class SetmealServiceImpl implements SetmealService {
             pageResult = new PageResult<>(setmealPage.getTotal(), setmealPage.getResult());
         }
         return pageResult;
+    }
+
+    /**
+     * 查询套餐
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Setmeal findById(int id) {
+        Setmeal setmeal = setmealDao.findById(id);
+        return setmeal;
+    }
+
+    /**
+     * 根据套餐查询检查组
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Integer> findCheckGroupBySetmeal(int id) {
+        List<Integer> integerList = setmealDao.findCheckGroupBySetmeal(id);
+        return integerList;
+    }
+
+    /**
+     * 编辑套餐
+     *
+     * @param setmeal
+     * @param checkgroupIds
+     * @throws MyException
+     */
+    @Override
+    public void update(Setmeal setmeal, Integer[] checkgroupIds) throws MyException {
+        Integer setmealId = setmeal.getId();
+        setmealDao.update(setmeal);
+        setmealDao.deleteCheckGroupBySetmeal(setmealId);
+
+        if (null != checkgroupIds) {
+            for (Integer checkgroupId : checkgroupIds) {
+                setmealDao.addCheckGroupBySetmealId(setmealId, checkgroupId);
+            }
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws MyException
+     */
+    @Override
+    public void delete(int id) throws MyException {
+        int count = setmealDao.findSetmealByOrder(id);
+        if (count > 0) {
+            throw new MyException("该套餐被订单使用了，不能删除");
+        }
+        setmealDao.deleteCheckGroupBySetmeal(id);
+        setmealDao.deleteSetmeal(id);
+
     }
 }

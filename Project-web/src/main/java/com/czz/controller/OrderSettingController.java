@@ -8,15 +8,11 @@ import com.czz.service.OrderSettingService;
 import com.czz.utils.POIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author czz
@@ -33,6 +29,12 @@ public class OrderSettingController {
 
     private OrderSetting os;
 
+    /**
+     * 批量获取表格数据
+     *
+     * @param excelFile
+     * @return
+     */
     @PostMapping("/upload")
     public Result upload(MultipartFile excelFile) {
         final SimpleDateFormat dateFormat = new SimpleDateFormat(POIUtils.DATE_FORMAT);
@@ -54,4 +56,26 @@ public class OrderSettingController {
         }
     }
 
+    /**
+     * 获取当前预约设置界面
+     *
+     * @param month
+     * @return
+     */
+    @GetMapping("/findByMonth")
+    public Result findDataByMonth(String month) {
+        List<Map<String, Integer>> mapList = orderSettingService.findByMonth(month);
+        return new Result(true, MessageConstant.GET_ORDERSETTING_SUCCESS, mapList);
+    }
+
+    /**
+     * 更新预约设置人数
+     *
+     * @return
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody OrderSetting orderSetting) {
+        orderSettingService.updateNumber(orderSetting);
+        return new Result(true, MessageConstant.ORDERSETTING_SUCCESS);
+    }
 }

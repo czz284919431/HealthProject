@@ -65,4 +65,8 @@ public interface CheckGroupDao {
     void updateCheckGroup(CheckGroup checkGroup);
 
     void deleteCheckItemByCheckGroup(Integer checkGroupId);
+
+    int findCheckGroupBySetmeal(int id);
+
+    void delete(int id);
 }

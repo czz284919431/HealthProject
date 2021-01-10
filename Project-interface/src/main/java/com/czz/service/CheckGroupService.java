@@ -2,6 +2,7 @@ package com.czz.service;
 
 import com.czz.entity.PageResult;
 import com.czz.entity.QueryPageBean;
+import com.czz.exception.MyException;
 import com.czz.health.pojo.CheckGroup;
 
 import java.util.List;
@@ -54,4 +55,12 @@ public interface CheckGroupService {
      * @param checkGroup
      */
     void update(Integer[] checkitemIds, CheckGroup checkGroup);
+
+    /**
+     * 删除检查组
+     *
+     * @param id
+     * @throws MyException
+     */
+    void delete(int id) throws MyException;
 }

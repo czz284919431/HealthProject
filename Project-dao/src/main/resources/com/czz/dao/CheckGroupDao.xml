@@ -53,14 +53,16 @@
         where id=#{id}
     </update>
 
-    <!-- &lt;!&ndash;编辑检查组里的检查项&ndash;&gt;
-     <update id="updateCheckItemByCheckGroupId" parameterType="_int">
-            update t_checkgroup_checkitem set checkitem_id=  where checkgroup_id=#{id}
-     </update>-->
-
     <!--编辑检查组里检查项之前的先删除检查项信息-->
     <delete id="deleteCheckItemByCheckGroup" parameterType="_int">
         delete from t_checkgroup_checkitem where checkgroup_id=#{id}
     </delete>
 
+    <select id="findCheckGroupBySetmeal" parameterType="_int" resultType="int">
+         select count(1) from t_setmeal_checkgroup where checkgroup_id=#{id}
+    </select>
+
+    <delete id="delete" parameterType="_int">
+         delete from t_checkgroup where id=#{id}
+    </delete>
 </mapper>

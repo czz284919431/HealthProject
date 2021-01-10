@@ -51,7 +51,7 @@ public class CheckGroupController {
      * @return
      */
     @PostMapping("/add")
-    public Result add(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds) {
+    public Result add(@RequestBody CheckGroup checkGroup, Integer[] checkitemIds) {
         checkGroupService.add(checkitemIds, checkGroup);
         return new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS);
     }
@@ -80,9 +80,27 @@ public class CheckGroupController {
         return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, integerList);
     }
 
+    /**
+     * 更新
+     *
+     * @param checkGroup
+     * @param checkitemIds
+     * @return
+     */
     @PostMapping("/update")
     public Result update(@RequestBody CheckGroup checkGroup, Integer[] checkitemIds) {
-        checkGroupService.update(checkitemIds,checkGroup);
+        checkGroupService.update(checkitemIds, checkGroup);
         return new Result(true, MessageConstant.EDIT_CHECKGROUP_SUCCESS);
+    }
+
+    /**
+     * 删除
+     *
+     * @return
+     */
+    @PostMapping("/delete")
+    public Result delete(int id) {
+        checkGroupService.delete(id);
+        return new Result(true, MessageConstant.DELETE_CHECKGROUP_SUCCESS);
     }
 }

@@ -4,6 +4,8 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.czz.dao.CheckGroupDao;
 import com.czz.entity.PageResult;
 import com.czz.entity.QueryPageBean;
+import com.czz.entity.Result;
+import com.czz.exception.MyException;
 import com.czz.health.pojo.CheckGroup;
 import com.czz.service.CheckGroupService;
 import com.github.pagehelper.Page;
@@ -119,9 +121,24 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.deleteCheckItemByCheckGroup(checkGroupId);
         if (null != checkitemIds) {
             for (Integer checkItemId : checkitemIds) {
-                checkGroupDao.addCheckItemByGroupId(checkGroup.getId(),checkItemId);
+                checkGroupDao.addCheckItemByGroupId(checkGroup.getId(), checkItemId);
             }
         }
 
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws MyException
+     */
+    @Override
+    public void delete(int id) throws MyException {
+        int count = checkGroupDao.findCheckGroupBySetmeal(id);
+        if (count > 0) {
+            throw new MyException("有关联套餐，不能删除");
+        }
+        checkGroupDao.delete(id);
     }
 }

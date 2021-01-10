@@ -17,10 +17,14 @@ public interface MessageConstant {
     static final String ADD_CHECKGROUP_SUCCESS = "新增检查组成功";
     static final String DELETE_CHECKGROUP_FAIL = "删除检查组失败";
     static final String DELETE_CHECKGROUP_SUCCESS = "删除检查组成功";
+    static final String DELETE_SETMEAL_SUCCESS = "删除套餐成功";
+    static final String DELETE_SETMEAL_FAIL = "删除套餐失败";
     static final String QUERY_CHECKGROUP_SUCCESS = "查询检查组成功";
     static final String QUERY_CHECKGROUP_FAIL = "查询检查组失败";
     static final String EDIT_CHECKGROUP_FAIL = "编辑检查组失败";
     static final String EDIT_CHECKGROUP_SUCCESS = "编辑检查组成功";
+    static final String EDIT_SETMEAL_SUCCESS = "编辑套餐成功";
+    static final String EDIT_SETMEAL_FAIL = "编辑套餐失败";
     static final String PIC_UPLOAD_SUCCESS = "图片上传成功";
     static final String PIC_UPLOAD_FAIL = "图片上传失败";
     static final String ADD_SETMEAL_FAIL = "新增套餐失败";
