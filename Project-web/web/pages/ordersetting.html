@@ -107,6 +107,7 @@
                                                     </template>
                                                 </template>
                                             </template>
+                                            <!--规定只有大于当日才能设置预约时间-->
                                             <button v-if="dayobject.day > today" @click="handleOrderSet(dayobject.day)"
                                                     class="orderbtn">设置
                                             </button>

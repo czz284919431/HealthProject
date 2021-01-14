@@ -25,4 +25,12 @@
     <update id="updateNumber" parameterType="orderSetting">
         update t_ordersetting set number=#{number} where orderDate=#{orderDate,jdbcType=DATE}
     </update>
+
+    <select id="findOrderDate" parameterType="Date" resultType="orderSetting">
+        select * from t_orderSetting where orderDate=#{orderDate,jdbcType=DATE}
+    </select>
+
+    <update id="updateReservationsByOrderSetting" parameterType="orderSetting">
+        update t_orderSetting set reservations= reservations+1 where orderDate=#{orderDate,jdbcType=DATE} and reservations &lt; number
+    </update>
 </mapper>

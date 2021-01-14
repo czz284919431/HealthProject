@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--加载freemarker配置Configuration-->
+    <bean id="freemarkerConfiguration" class="freemarker.template.Configuration">
+        <!--无参构造方法-->
+        <constructor-arg index="0" ref="freemarkerVersion"></constructor-arg>
+    </bean>
+
+    <!--加载对象-->
+    <bean id="freemarkerVersion" class="freemarker.template.Configuration" factory-method="getVersion"></bean>
+
+</beans>

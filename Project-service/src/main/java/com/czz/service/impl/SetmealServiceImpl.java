@@ -1,12 +1,10 @@
 package com.czz.service.impl;
 
-import com.alibaba.druid.sql.PagerUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.czz.dao.SetmealDao;
 import com.czz.entity.PageResult;
 import com.czz.entity.QueryPageBean;
 import com.czz.exception.MyException;
-import com.czz.health.pojo.CheckGroup;
 import com.czz.health.pojo.Setmeal;
 import com.czz.service.SetmealService;
 import com.czz.utils.QiNiuUtils;
@@ -15,7 +13,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -28,18 +25,20 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Autowired
     private SetmealDao setmealDao;
+
     private PageResult<Setmeal> pageResult;
 
     @Override
     @Transactional
-    public void add(Setmeal setmeal, Integer[] checkGroupIds) {
-        setmealDao.addSetmeal(setmeal);
+    public Integer add(Setmeal setmeal, Integer[] checkGroupIds) {
+        Integer setmealId1 = setmealDao.addSetmeal(setmeal);
         Integer setmealId = setmeal.getId();
         if (null != setmealId) {
             for (Integer checkGroupId : checkGroupIds) {
                 setmealDao.addCheckGroupBySetmealId(setmealId, checkGroupId);
             }
         }
+        return setmealId1;
     }
 
     /**
@@ -95,6 +94,7 @@ public class SetmealServiceImpl implements SetmealService {
      * @throws MyException
      */
     @Override
+    @Transactional
     public void update(Setmeal setmeal, Integer[] checkgroupIds) throws MyException {
         Integer setmealId = setmeal.getId();
         setmealDao.update(setmeal);
@@ -114,6 +114,7 @@ public class SetmealServiceImpl implements SetmealService {
      * @throws MyException
      */
     @Override
+    @Transactional
     public void delete(int id) throws MyException {
         int count = setmealDao.findSetmealByOrder(id);
         if (count > 0) {
@@ -122,5 +123,28 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDao.deleteCheckGroupBySetmeal(id);
         setmealDao.deleteSetmeal(id);
 
+    }
+
+    /**
+     * 获取套餐列表信息
+     *
+     * @return
+     */
+    @Override
+    public List<Setmeal> findAll() {
+        List<Setmeal> setmealList = setmealDao.findAll();
+        return setmealList;
+    }
+
+    /**
+     * 获取套餐详细信息（检查组、检查项）
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Setmeal findDetailById(int id) {
+        Setmeal setmeal = setmealDao.findDetailById(id);
+        return setmeal;
     }
 }

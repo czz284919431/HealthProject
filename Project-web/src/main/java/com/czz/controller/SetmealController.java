@@ -11,8 +11,11 @@ import com.czz.service.SetmealService;
 import com.czz.utils.QiNiuUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,9 @@ public class SetmealController {
 
     @Reference
     private SetmealService setmealService;
+
+    @Autowired
+    private JedisPool jedisPool;
 
     /**
      * 上传图片
@@ -75,7 +81,11 @@ public class SetmealController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
-        setmealService.add(setmeal, checkgroupIds);
+        Integer setmealId = setmealService.add(setmeal, checkgroupIds);
+        Jedis jedis = jedisPool.getResource();
+        String key = "setmeal:static:html";
+        Long currentTimeMillis = System.currentTimeMillis();
+        jedis.zadd(key, currentTimeMillis.doubleValue(), setmealId + "|1|" + currentTimeMillis);
         return new Result(true, MessageConstant.ADD_SETMEAL_SUCCESS);
     }
 
@@ -124,6 +134,10 @@ public class SetmealController {
     @PostMapping("/update")
     public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         setmealService.update(setmeal, checkgroupIds);
+        Jedis jedis = jedisPool.getResource();
+        String key = "setmeal:static:html";
+        Long currentTimeMillis = System.currentTimeMillis();
+        jedis.zadd(key, currentTimeMillis.doubleValue(), setmeal.getId() + "|1|" + currentTimeMillis);
         return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
     }
 
@@ -135,6 +149,10 @@ public class SetmealController {
     @PostMapping("/delete")
     public Result delete(int id) {
         setmealService.delete(id);
+        Jedis jedis = jedisPool.getResource();
+        String key = "setmeal:static:html";
+        Long currentTimeMillis = System.currentTimeMillis();
+        jedis.zadd(key, currentTimeMillis.doubleValue(), id + "|0|" + currentTimeMillis);
         return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
     }
 }

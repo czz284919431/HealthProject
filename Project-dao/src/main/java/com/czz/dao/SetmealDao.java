@@ -1,16 +1,14 @@
 package com.czz.dao;
 
-import com.czz.health.pojo.CheckGroup;
 import com.czz.health.pojo.Setmeal;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
 public interface SetmealDao {
 
-    void addSetmeal(Setmeal setmeal);
+    Integer addSetmeal(Setmeal setmeal);
 
     void addCheckGroupBySetmealId(@Param("setmealId") Integer setmealId, @Param("checkGroupId") Integer checkGroupId);
 
@@ -28,4 +26,8 @@ public interface SetmealDao {
     void deleteSetmeal(int id);
 
     int findSetmealByOrder(int id);
+
+    List<Setmeal> findAll();
+
+    Setmeal findDetailById(int id);
 }

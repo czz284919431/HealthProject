@@ -51,4 +51,39 @@
     <select id="findSetmealByOrder" parameterType="_int" resultType="int">
          select count(1) from t_order where setmeal_id=#{id}
     </select>
+
+    <select id="findAll" resultType="Setmeal">
+        select * from t_setmeal
+    </select>
+
+    <select id="findDetailById" parameterType="_int" resultMap="setmealDetailResultMap">
+        select s.id,s.name,s.remark,s.img,s.age,s.sex,
+            sc.checkgroup_id,g.name checkgroup_name,g.remark checkgroup_remark,
+            cc.checkitem_id,i.name checkitem_name
+        from
+        t_setmeal s left join t_setmeal_checkgroup sc  on sc.setmeal_id=s.id
+        left join t_checkgroup g on g.id=sc.checkgroup_id
+        left join t_checkgroup_checkitem cc on cc.checkgroup_id=g.id
+        left join t_checkitem i on i.id=cc.checkitem_id
+        where s.id=#{id}
+    </select>
+
+    <resultMap id="setmealDetailResultMap" type="setmeal">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="img" column="img"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+
+        <collection property="checkGroups" ofType="CheckGroup">
+            <id property="id" column="checkgroup_id"/>
+            <result property="name" column="checkgroup_name"/>
+            <result property="remark" column="checkgroup_remark"/>
+            <collection property="checkItems" ofType="CheckItem">
+                <id property="id" column="checkitem_id"/>
+                <result property="name" column="checkitem_name"/>
+            </collection>
+        </collection>
+    </resultMap>
 </mapper>
